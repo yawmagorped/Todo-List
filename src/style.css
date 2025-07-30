@@ -1,3 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    color: white;
+    box-sizing: border-box;
+}
+
+:root {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+}
+
 body {
-    background-color: gray;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: stretch;
+}
+
+.side-bar {
+    background-color: rgb(0, 12, 53);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.side-bar > .home , .side-bar-projects > li, .side-bar-dates > li {
+    padding-left: 16px;
+    padding: 4px 64px 4px 32px;
+}
+
+#user-info {
+    background-color: rgb(0, 18, 77);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+}
+
+#user-info img {
+    height: 64px;
+}
+
+
+body > :last-child {
+    text-align: center;
+    background-color: rgb(26, 26, 31);
+    flex: 1;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+header {
+    font-size: 2rem;
+    padding-top: 32px;
+    padding-bottom: 16px;
+}
+
+.form-container {
+    min-width: 420px;
+    padding: 0 15%;
+    height: 200px;
+    background-color: rgb(75, 75, 75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+}
+.todo-input {
+    position: relative;
+    align-self: stretch;
+}
+
+.todo-input img {
+    position: absolute;
+    height: 48px;
+    right: 0;
+}
+
+#todo-text {
+    width: 100%;
+    height: 48px;
+    padding: 2px;
+    font-size: 1.5rem;
+}
+.second-row {
+    align-self: stretch;
+    display: flex;
+    justify-content: space-between;
+}
+.form-container * {
+    color: black;
+}
+
+.project-selector {
+    display: flex;
+    gap: 4px;
+}
+
+.add-button {
+    height: 100%;
+    width: 32px;
+    font-size: 1rem;
+}
+
+.second-row select, .second-row input{
+    width: 120px;
+    height: 24px;
+}
+.todo-item {
+    background-color: rgb(43, 40, 36);
 }
