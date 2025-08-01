@@ -7,6 +7,8 @@
     box-sizing: border-box;
 }
 
+textarea, select, input, button { outline: none; }
+
 :root {
     font-family: 'Courier New', Courier, monospace;
     font-size: 18px;
@@ -88,13 +90,23 @@ header {
     padding: 2px;
     font-size: 1.5rem;
 }
-.second-row {
+.form-container > .second-row {
     align-self: stretch;
     display: flex;
     justify-content: space-between;
 }
 .form-container * {
     color: black;
+}
+
+.project-selector-holder {
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
+}
+
+#new-group.false {
+    border: 1px solid red;
 }
 
 .project-selector {
@@ -108,15 +120,19 @@ header {
     font-size: 1rem;
 }
 
-.second-row select, .second-row input{
+.form-container > .second-row select, .form-container > .second-row input{
     width: 120px;
     height: 24px;
 }
 .todo-item {
-    background-color: rgb(43, 40, 36);
     border-top: 2px solid black;
     padding: 16px 0;
+    padding: 16px 15%;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
 }
 .todo-container {
+    background-color: rgb(43, 40, 36);
     border-bottom: 2px solid rgb(0, 0, 0);
 }
