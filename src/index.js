@@ -1,29 +1,45 @@
 import "./style.css";
 
-function todoObj(c, g, d, gn) {
-    let content = c;
-    let date = d;
-    let groupName = gn;
 
-    return {content, date, groupName};
-}
+const todoObjManager = ( () => {
+    let todoObjLst = [];
+    
+    const makeNewTodoObj = (todo) => {
+        todoObjLst.push(todo);
+        groupManager.addGroupMember(todo, todo.groupName);
+    }
+
+    const verifyObj = (state) => {
+        //check date range...
+        return true;
+    }
+    
+    function todoObj(content, date, groupName) { 
+        return {content, date, groupName};
+    }
+
+    return {makeNewTodoObj, verifyObj, todoObj, todoObjLst};
+})();
+
 
 function group(name) {
     let groupName = name;
-    let todoObjLst = [];
+    let groupObjLst = [];
 
     const addMember = (todoObj) => {
-        todoObjLst.push(todoObj);
+        groupObjLst.push(todoObj);
     }
-    const getThisGroup = () => {
-        return this;
-    }
-    return {getThisGroup, addMember, groupName, todoObjLst};
+    return {addMember, groupName, groupObjLst};
 }
 
 const groupManager = ( () => { //IIFE
     let groupLst = [];
     let isCopy;
+
+    const addGroupMember = (todoObj, groupName) => {
+        let groupObj = groupLst.find( (element) => element.groupName == groupName );
+        groupObj.addMember(todoObj);
+    }
 
     const addGroup = (name) => {
         isCopy = false;
@@ -36,23 +52,23 @@ const groupManager = ( () => { //IIFE
         if(isCopy) return false;
 
         let g = new group(name);
-        groupLst.push(g); // new keyword?
+        groupLst.push(g);
         return true;
     }
-    return {addGroup, groupLst};
+    return {addGroupMember, addGroup, groupLst};
 })();
+
+groupManager.addGroup("Default");
 
 elementManager();
 function elementManager() {
-    let todoTxt = document.querySelector("#todo-text");
+    let todoTxtInput = document.querySelector("#todo-text");
     let selectedGroup = document.querySelector("select#groups");
     let groupAdder = document.querySelector(".add-button");
     let date = document.querySelector("#todo-date");
 
-    const readElement = (state) => {
-        state.content = todoTxt.value;
-        state.date = selectedGroup.value;
-        state.groupName = date.value;
+    const readElements = () => {
+        let state = todoObjManager.todoObj(todoTxtInput.value, date.value, selectedGroup.value);
         return state;
     }
 
@@ -75,6 +91,7 @@ function elementManager() {
 
     groupAdder.addEventListener('click', () => {
         projectHolder.appendChild(groupInputBox);
+        groupInputBox.focus();
     }); 
     
     groupInputBox.addEventListener('keydown', (element) => {
@@ -92,7 +109,23 @@ function elementManager() {
     });
 
     const cleanElements = () => {
-        todoTxt.value = "";
+        todoTxtInput.value = "";
         date.value = "";
     }
+
+    const sendTodo = () => {
+        if (todoObjManager.verifyObj(readElements())) {
+            todoObjManager.makeNewTodoObj(readElements());
+            cleanElements();
+        }
+    }
+
+    let enterIcon = document.querySelector(".enter-icon");
+    
+    enterIcon.addEventListener('click', sendTodo);
+    todoTxtInput.addEventListener('keydown', (element) => {
+        if(element.key == "Enter") 
+            sendTodo();
+    });
+
 }
