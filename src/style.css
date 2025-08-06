@@ -29,6 +29,10 @@ body {
     gap: 32px;
 }
 
+.side-bar-projects > li {
+    cursor: pointer;
+}
+
 .side-bar > .home , .side-bar-projects > li, .side-bar-dates > li {
     padding-left: 16px;
     padding: 4px 64px 4px 32px;
@@ -131,8 +135,14 @@ header {
     text-align: start;
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 .todo-container {
     background-color: rgb(43, 40, 36);
     border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+.todo-item > .first-row {
+    display: flex;
+    justify-content: space-around;
 }

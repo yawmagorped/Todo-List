@@ -35,7 +35,7 @@ function group(name) {
 const groupManager = ( () => { //IIFE
     let groupLst = [];
     let isCopy;
-
+    
     const addGroupMember = (todoObj, groupName) => {
         let groupObj = groupLst.find( (element) => element.groupName == groupName );
         groupObj.addMember(todoObj);
@@ -50,7 +50,7 @@ const groupManager = ( () => { //IIFE
             }
         });
         if(isCopy) return false;
-
+        
         let g = new group(name);
         groupLst.push(g);
         return true;
@@ -58,7 +58,9 @@ const groupManager = ( () => { //IIFE
     return {addGroupMember, addGroup, groupLst};
 })();
 
-groupManager.addGroup("Default");
+groupManager.addGroup("Personal");
+groupManager.addGroup("Work");
+groupManager.addGroup("Other");
 
 elementManager();
 function elementManager() {
@@ -66,17 +68,25 @@ function elementManager() {
     let selectedGroup = document.querySelector("select#groups");
     let groupAdder = document.querySelector(".add-button");
     let date = document.querySelector("#todo-date");
-
+    
+    let projectHolder = document.querySelector(".project-selector-holder");
+    let groupSelect = document.querySelector("select#groups");
+    
+    let sideBarProjects = document.querySelector("ul.side-bar-projects");
+    
+    let todoContainer = document.querySelector(".todo-container");
+    
     const readElements = () => {
         let state = todoObjManager.todoObj(todoTxtInput.value, date.value, selectedGroup.value);
         return state;
     }
-
+    
     let groupInputBox = document.createElement("input");
     groupInputBox.id = "new-group";
     groupInputBox.type = "text";
     groupInputBox.name = "new-group";
-
+    
+    
     const newOption = (value) => {
         let opt = document.createElement("option");
         opt.value = value;
@@ -84,10 +94,13 @@ function elementManager() {
         
         return opt;
     }
-
-
-    let projectHolder = document.querySelector(".project-selector-holder");
-    let groupSelect = document.querySelector("select#groups");
+    
+    const newList = (txt) => {
+        let lst = document.createElement("li");
+        lst.innerText = txt;
+        
+        return lst;
+    }
 
     groupAdder.addEventListener('click', () => {
         projectHolder.appendChild(groupInputBox);
@@ -98,7 +111,8 @@ function elementManager() {
         if(element.key == "Enter") {
             if(groupManager.addGroup(groupInputBox.value)) {
                 groupSelect.appendChild(newOption(groupInputBox.value));
-                
+                sideBarProjects.appendChild(newList(groupInputBox.value));
+
                 groupInputBox.classList.remove("false");
                 projectHolder.removeChild(groupInputBox);
                 groupInputBox.value = "";
@@ -107,17 +121,32 @@ function elementManager() {
             }
         }
     });
-
+    
     const cleanElements = () => {
         todoTxtInput.value = "";
         date.value = "";
     }
-
+    
     const sendTodo = () => {
-        if (todoObjManager.verifyObj(readElements())) {
-            todoObjManager.makeNewTodoObj(readElements());
+        let todo = readElements();
+        if (todoObjManager.verifyObj(todo)) {
+            todoObjManager.makeNewTodoObj(todo);
+            addTodoItem(todo);
             cleanElements();
         }
+    }
+
+    
+    const newItem = (todo) => {
+        let todoItem = document.createElement("div");
+        todoItem.classList.add("todo-item");
+        todoItem.innerHTML = `<div class="first-row"><div class="todo-date">${todo.date}</div><div class="todo-group">${todo.groupName}</div></div><div class="second-row">${todo.content}</div>`
+        return todoItem;
+    }
+    
+    const addTodoItem = (todo) => {
+        let todoItem = newItem(todo);
+        todoContainer.appendChild(todoItem);
     }
 
     let enterIcon = document.querySelector(".enter-icon");
