@@ -29,7 +29,10 @@ function group(name) {
     const addMember = (todoObj) => {
         groupObjLst.push(todoObj);
     }
-    return {addMember, groupName, groupObjLst};
+
+    const getGroupObjList = () => groupObjLst;
+
+    return {addMember, groupName, getGroupObjList};
 }
 
 const groupManager = ( () => { //IIFE
@@ -37,11 +40,15 @@ const groupManager = ( () => { //IIFE
     let isCopy;
     
     const addGroupMember = (todoObj, groupName) => {
-        let groupObj = groupLst.find( (element) => element.groupName == groupName );
+        let groupObj = findGroupObj(groupName);
         groupObj.addMember(todoObj);
     }
 
-    const addGroup = (name) => {
+    const findGroupObj = (name) => {
+        return groupLst.find( (element) => element.groupName == name);
+    }
+
+    const verifyGroup = (name) => {
         isCopy = false;
         groupLst.forEach(element => {
             if(element.groupName == name) {
@@ -51,16 +58,17 @@ const groupManager = ( () => { //IIFE
         });
         if(isCopy) return false;
         
-        let g = new group(name);
-        groupLst.push(g);
         return true;
     }
-    return {addGroupMember, addGroup, groupLst};
+    
+    const addGroup = (name) => {
+        let g = new group(name);
+        groupLst.push(g);
+    }
+
+    return {addGroupMember, addGroup, verifyGroup, findGroupObj, groupLst};
 })();
 
-groupManager.addGroup("Personal");
-groupManager.addGroup("Work");
-groupManager.addGroup("Other");
 
 elementManager();
 function elementManager() {
@@ -99,29 +107,41 @@ function elementManager() {
         let lst = document.createElement("li");
         lst.innerText = txt;
         
+        lst.addEventListener('click', () => {
+            showAllInGroup(groupManager.findGroupObj(txt));
+        })
+        
         return lst;
     }
-
+    
     groupAdder.addEventListener('click', () => {
         projectHolder.appendChild(groupInputBox);
         groupInputBox.focus();
     }); 
     
-    groupInputBox.addEventListener('keydown', (element) => {
+    const addGroupElements = (val) => {
+        groupManager.addGroup(val);
+        groupSelect.appendChild(newOption(val));
+        sideBarProjects.appendChild(newList(val));
+    }
+    addGroupElements("Personal");
+    addGroupElements("Work");
+    addGroupElements("Other");
+    
+    groupInputBox.addEventListener('keydown', () => {
         if(element.key == "Enter") {
-            if(groupManager.addGroup(groupInputBox.value)) {
-                groupSelect.appendChild(newOption(groupInputBox.value));
-                sideBarProjects.appendChild(newList(groupInputBox.value));
-
+            if(groupManager.verifyGroup(groupInputBox.value)) {
+                addGroupElements(groupInputBox.value);
                 groupInputBox.classList.remove("false");
                 projectHolder.removeChild(groupInputBox);
                 groupInputBox.value = "";
-            } else {
+            }
+            else {
                 groupInputBox.classList.add("false");
             }
         }
     });
-    
+
     const cleanElements = () => {
         todoTxtInput.value = "";
         date.value = "";
@@ -148,6 +168,22 @@ function elementManager() {
         let todoItem = newItem(todo);
         todoContainer.appendChild(todoItem);
     }
+
+    const showAllInGroup = (groupObj) => {
+        cleanTodoList();
+        let objLst = groupObj.getGroupObjList();
+        objLst.forEach(element => {
+            addTodoItem(element);
+        });
+    }
+
+    const cleanTodoList = () => {
+        while (todoContainer.firstChild) {
+            todoContainer.removeChild(todoContainer.lastChild);
+        }
+    }
+
+
 
     let enterIcon = document.querySelector(".enter-icon");
     
