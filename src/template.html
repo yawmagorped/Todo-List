@@ -15,8 +15,8 @@
         <div class="home">Home</div>
         
         <ul class="side-bar-dates">
-            <li>Today</li>
-            <li>This week</li>
+            <li id="today">Today</li>
+            <li id="this-week">This week</li>
             <li>Calender</li>
         </ul>
         <ul class="side-bar-projects">
@@ -53,29 +53,39 @@
 
             <div class="todo-container">
                 <div class="todo-item">
-                    <div class="first-row">
-                        <div class="todo-date">
-                            date
+                    <div class="todo-column">
+                        <div class="first-row">
+                            <div class="todo-date">
+                                date
+                            </div>
+                            <div class="todo-group">
+                                groupName
+                            </div>
                         </div>
-                        <div class="todo-group">
-                            groupName
+                        <div class="second-row">
+                            I should go to the dentist tomorrow
                         </div>
                     </div>
-                    <div class="second-row">
-                        I should go to the dentist tomorrow
+                    <div class="second-column">
+                        <button>remove</button>
                     </div>
                 </div>
                 <div class="todo-item">
-                    <div class="first-row">
-                        <div class="todo-date">
-                            date
+                    <div class="todo-column">
+                        <div class="first-row">
+                            <div class="todo-date">
+                                date
+                            </div>
+                            <div class="todo-group">
+                                groupName
+                            </div>
                         </div>
-                        <div class="todo-group">
-                            groupName
+                        <div class="second-row">
+                            I should go to the dentist tomorrow
                         </div>
                     </div>
-                    <div class="second-row">
-                        I should go to the dentist the day after tomorrow
+                    <div class="second-column">
+                        <button>remove</button>
                     </div>
                 </div>
             </div>

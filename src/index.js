@@ -1,5 +1,5 @@
 import "./style.css";
-
+import { formatDistanceStrict, isToday, startOfToday, isThisWeek } from "date-fns";
 
 const todoObjManager = ( () => {
     let todoObjLst = [];
@@ -9,16 +9,33 @@ const todoObjManager = ( () => {
         groupManager.addGroupMember(todo, todo.groupName);
     }
 
-    const verifyObj = (state) => {
-        //check date range...
-        return true;
+    const verifyObj = (todo) => {
+        if(todo.date != "")
+            return true;
+        else 
+            return false;
     }
     
     function todoObj(content, date, groupName) { 
         return {content, date, groupName};
     }
 
-    return {makeNewTodoObj, verifyObj, todoObj, todoObjLst};
+    const fromTodayList = () => {
+        return todoObjLst.filter((element) => isToday(element.date));
+    }
+    const fromThisWeekList = () => {
+        return todoObjLst.filter((element) => isThisWeek(element.date));
+    }
+
+    const removeObj = (todoObj) => {
+        let index = todoObjLst.indexOf(todoObj);
+        todoObjLst.splice(index, 1);
+        
+        let group = groupManager.findGroupObj(todoObj.groupName);
+        group.removeMember(todoObj);
+    }
+
+    return {makeNewTodoObj, verifyObj, todoObj, removeObj, fromTodayList, fromThisWeekList, todoObjLst};
 })();
 
 
@@ -29,10 +46,15 @@ function group(name) {
     const addMember = (todoObj) => {
         groupObjLst.push(todoObj);
     }
+    
+    const removeMember = (todoObj) => {
+        let index2 = groupObjLst.indexOf(todoObj);
+        groupObjLst.splice(index2, 1);
+    }
 
     const getGroupObjList = () => groupObjLst;
 
-    return {addMember, groupName, getGroupObjList};
+    return {addMember, groupName, getGroupObjList, removeMember};
 }
 
 const groupManager = ( () => { //IIFE
@@ -128,7 +150,7 @@ function elementManager() {
     addGroupElements("Work");
     addGroupElements("Other");
     
-    groupInputBox.addEventListener('keydown', () => {
+    groupInputBox.addEventListener('keydown', (element) => {
         if(element.key == "Enter") {
             if(groupManager.verifyGroup(groupInputBox.value)) {
                 addGroupElements(groupInputBox.value);
@@ -156,17 +178,23 @@ function elementManager() {
         }
     }
 
-    
     const newItem = (todo) => {
         let todoItem = document.createElement("div");
         todoItem.classList.add("todo-item");
-        todoItem.innerHTML = `<div class="first-row"><div class="todo-date">${todo.date}</div><div class="todo-group">${todo.groupName}</div></div><div class="second-row">${todo.content}</div>`
+        todoItem.innerHTML = `<div class="todo-column"><div class="first-row"><div class="todo-date">${isToday(todo.date) ? "Today" : formatDistanceStrict(todo.date, startOfToday(), { addSuffix: true, unit:'day', roundingMethod:'floor'}) }</div><div class="todo-group">${todo.groupName}</div></div><div class="second-row">${todo.content}</div></div><div class="second-column"><button>remove</button></div>`
         return todoItem;
     }
     
     const addTodoItem = (todo) => {
         let todoItem = newItem(todo);
-        todoContainer.appendChild(todoItem);
+        
+        let btn = todoItem.querySelector(".second-column button");
+        btn.addEventListener('click', () => {
+            todoItem.remove();
+            todoObjManager.removeObj(todo);
+        })
+        
+        todoContainer.prepend(todoItem);
     }
 
     const showAllInGroup = (groupObj) => {
@@ -177,13 +205,31 @@ function elementManager() {
         });
     }
 
+    let todayProjects = document.querySelector(".side-bar-dates #today");
+    let thisWeekProjects = document.querySelector(".side-bar-dates #this-week");
+
+    todayProjects.addEventListener('click', () => {
+        let objList = todoObjManager.fromTodayList();
+        showAllInList(objList);
+    })
+
+    thisWeekProjects.addEventListener('click', () => {
+        let objList = todoObjManager.fromThisWeekList();
+        showAllInList(objList);
+    })
+
+    const showAllInList = (objList) => {
+        cleanTodoList();
+        objList.forEach(element => {
+            addTodoItem(element);
+        });
+    } 
+
     const cleanTodoList = () => {
         while (todoContainer.firstChild) {
             todoContainer.removeChild(todoContainer.lastChild);
         }
     }
-
-
 
     let enterIcon = document.querySelector(".enter-icon");
     

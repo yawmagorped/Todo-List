@@ -29,7 +29,7 @@ body {
     gap: 32px;
 }
 
-.side-bar-projects > li {
+.side-bar-projects > li, .side-bar-dates > li:not(:last-child) {
     cursor: pointer;
 }
 
@@ -128,21 +128,31 @@ header {
     width: 120px;
     height: 24px;
 }
+.todo-column {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 6px;
+}
 .todo-item {
     border-top: 2px solid black;
     padding: 16px 0;
     padding: 16px 15%;
-    text-align: start;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    text-align: start;
+    align-items: center;
 }
+
 .todo-container {
     background-color: rgb(43, 40, 36);
     border-bottom: 2px solid rgb(0, 0, 0);
 }
 
-.todo-item > .first-row {
+.todo-column > .first-row {
     display: flex;
     justify-content: space-around;
+}
+
+.second-column button {
+    color: rgb(205, 53, 53);
 }
