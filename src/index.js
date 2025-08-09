@@ -1,14 +1,29 @@
 import "./style.css";
+import { storageAvailable } from "./storageManagement.js";
 import { formatDistanceStrict, isToday, startOfToday, isThisWeek } from "date-fns";
 
+window.addEventListener('visibilitychange', (event) => {
+    if (storageAvailable("localStorage"))
+        localStorage.setItem("todoObjLst", JSON.stringify(todoObjManager.todoObjLst));
+});
+addEventListener("load", (event) => { 
+    if (localStorage.getItem("todoObjLst")) {
+        let todoObjLst =  JSON.parse(localStorage.getItem("todoObjLst"));
+        todoObjLst.forEach(element => {
+            todoObjManager.makeNewTodoObj(element);
+            elementManager.addTodoItem(element);
+        });
+    }
+});
 const todoObjManager = ( () => {
     let todoObjLst = [];
     
     const makeNewTodoObj = (todo) => {
         todoObjLst.push(todo);
+
         groupManager.addGroupMember(todo, todo.groupName);
     }
-
+    
     const verifyObj = (todo) => {
         if(todo.date != "")
             return true;
@@ -31,7 +46,7 @@ const todoObjManager = ( () => {
         let index = todoObjLst.indexOf(todoObj);
         todoObjLst.splice(index, 1);
         
-        let group = groupManager.findGroupObj(todoObj.groupName);
+        let group = groupManager.getGroupObj(todoObj.groupName);
         group.removeMember(todoObj);
     }
 
@@ -51,10 +66,10 @@ function group(name) {
         let index2 = groupObjLst.indexOf(todoObj);
         groupObjLst.splice(index2, 1);
     }
-
+    
     const getGroupObjList = () => groupObjLst;
-
-    return {addMember, groupName, getGroupObjList, removeMember};
+    
+    return {addMember, groupName, groupObjLst, getGroupObjList, removeMember};
 }
 
 const groupManager = ( () => { //IIFE
@@ -62,12 +77,18 @@ const groupManager = ( () => { //IIFE
     let isCopy;
     
     const addGroupMember = (todoObj, groupName) => {
-        let groupObj = findGroupObj(groupName);
+        let groupObj = getGroupObj(groupName);
         groupObj.addMember(todoObj);
     }
 
-    const findGroupObj = (name) => {
-        return groupLst.find( (element) => element.groupName == name);
+    const getGroupObj = (name) => {
+        let g = groupLst.find( (element) => element.groupName == name);
+        if (g) {
+            return g;
+        } else {
+            elementManager.addGroupElements(name); // decoupling needed? idk... maybe custom events?
+            return groupLst.find( (element) => element.groupName == name);
+        }
     }
 
     const verifyGroup = (name) => {
@@ -88,12 +109,12 @@ const groupManager = ( () => { //IIFE
         groupLst.push(g);
     }
 
-    return {addGroupMember, addGroup, verifyGroup, findGroupObj, groupLst};
+    return {addGroupMember, addGroup, verifyGroup, getGroupObj, groupLst};
 })();
 
 
-elementManager();
-function elementManager() {
+
+const elementManager = ( () => {
     let todoTxtInput = document.querySelector("#todo-text");
     let selectedGroup = document.querySelector("select#groups");
     let groupAdder = document.querySelector(".add-button");
@@ -130,7 +151,7 @@ function elementManager() {
         lst.innerText = txt;
         
         lst.addEventListener('click', () => {
-            showAllInGroup(groupManager.findGroupObj(txt));
+            showAllInGroup(groupManager.getGroupObj(txt));
         })
         
         return lst;
@@ -141,10 +162,10 @@ function elementManager() {
         groupInputBox.focus();
     }); 
     
-    const addGroupElements = (val) => {
-        groupManager.addGroup(val);
-        groupSelect.appendChild(newOption(val));
-        sideBarProjects.appendChild(newList(val));
+    const addGroupElements = (groupName) => {
+        groupManager.addGroup(groupName);
+        groupSelect.appendChild(newOption(groupName));
+        sideBarProjects.appendChild(newList(groupName));
     }
     addGroupElements("Personal");
     addGroupElements("Work");
@@ -207,6 +228,7 @@ function elementManager() {
 
     let todayProjects = document.querySelector(".side-bar-dates #today");
     let thisWeekProjects = document.querySelector(".side-bar-dates #this-week");
+    let home = document.querySelector(".side-bar .home");
 
     todayProjects.addEventListener('click', () => {
         let objList = todoObjManager.fromTodayList();
@@ -217,6 +239,8 @@ function elementManager() {
         let objList = todoObjManager.fromThisWeekList();
         showAllInList(objList);
     })
+
+    home.addEventListener('click', () => {showAllInList(todoObjManager.todoObjLst)});
 
     const showAllInList = (objList) => {
         cleanTodoList();
@@ -239,4 +263,5 @@ function elementManager() {
             sendTodo();
     });
 
-}
+    return {addTodoItem, addGroupElements};
+})();

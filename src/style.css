@@ -29,8 +29,12 @@ body {
     gap: 32px;
 }
 
-.side-bar-projects > li, .side-bar-dates > li:not(:last-child) {
+.side-bar-projects > li, .side-bar-dates > li:not(#calender), .side-bar .home {
     cursor: pointer;
+}
+
+#calender {
+    color: rgb(111, 111, 111);
 }
 
 .side-bar > .home , .side-bar-projects > li, .side-bar-dates > li {
