@@ -1,162 +1,172 @@
 * {
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style: none;
-    color: white;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+  color: white;
+  box-sizing: border-box;
 }
 
-textarea, select, input, button { outline: none; }
+textarea,
+select,
+input,
+button {
+  outline: none;
+}
 
 :root {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 18px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 18px;
 }
 
 body {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: stretch;
-    background-color: rgb(26, 26, 31);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: stretch;
+  background-color: rgb(26, 26, 31);
 }
 
 .side-bar {
-    background-color: rgb(0, 12, 53);
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+  background-color: rgb(0, 12, 53);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.side-bar-projects > li, .side-bar-dates > li:not(#calender), .side-bar .home {
-    cursor: pointer;
+.side-bar-projects > li,
+.side-bar-dates > li:not(#calender),
+.side-bar .home {
+  cursor: pointer;
 }
 
 #calender {
-    color: rgb(111, 111, 111);
+  color: rgb(111, 111, 111);
 }
 
-.side-bar > .home , .side-bar-projects > li, .side-bar-dates > li {
-    padding-left: 16px;
-    padding: 4px 64px 4px 32px;
+.side-bar > .home,
+.side-bar-projects > li,
+.side-bar-dates > li {
+  padding-left: 16px;
+  padding: 4px 64px 4px 32px;
 }
 
 #user-info {
-    background-color: rgb(0, 18, 77);
-    padding: 8px;
-    display: flex;
-    align-items: center;
+  background-color: rgb(0, 18, 77);
+  padding: 8px;
+  display: flex;
+  align-items: center;
 }
 
 #user-info img {
-    height: 64px;
+  height: 64px;
 }
 
 .content-container {
-    padding-left: 25%;
-    padding-right: 25%;
+  padding-left: 25%;
+  padding-right: 25%;
 }
 
 body > :last-child {
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 header {
-    font-size: 2rem;
-    padding-top: 32px;
-    padding-bottom: 16px;
+  font-size: 2rem;
+  padding-top: 32px;
+  padding-bottom: 16px;
 }
 
 .form-container {
-    min-width: 300px;
-    padding: 0 15%;
-    height: 200px;
-    background-color: rgb(75, 75, 75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 8px;
+  min-width: 300px;
+  padding: 0 15%;
+  height: 200px;
+  background-color: rgb(75, 75, 75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
 }
 .todo-input {
-    position: relative;
-    align-self: stretch;
+  position: relative;
+  align-self: stretch;
 }
 
 .todo-input img {
-    position: absolute;
-    height: 48px;
-    right: 0;
-    cursor: pointer;
+  position: absolute;
+  height: 48px;
+  right: 0;
+  cursor: pointer;
 }
 
 #todo-text {
-    width: 100%;
-    height: 48px;
-    padding: 2px;
-    font-size: 1.5rem;
+  width: 100%;
+  height: 48px;
+  padding: 2px;
+  font-size: 1.5rem;
 }
 .form-container > .second-row {
-    align-self: stretch;
-    display: flex;
-    justify-content: space-between;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
 }
 .form-container * {
-    color: black;
+  color: black;
 }
 
 .project-selector-holder {
-    display: flex;
-    gap: 4px;
-    flex-direction: column;
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
 }
 
 #new-group.false {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
 .project-selector {
-    display: flex;
-    gap: 4px;
+  display: flex;
+  gap: 4px;
 }
 
 .add-button {
-    height: 100%;
-    width: 32px;
-    font-size: 1rem;
+  height: 100%;
+  width: 32px;
+  font-size: 1rem;
 }
 
-.form-container > .second-row select, .form-container > .second-row input{
-    width: 120px;
-    height: 24px;
+.form-container > .second-row select,
+.form-container > .second-row input {
+  width: 120px;
+  height: 24px;
 }
 .todo-column {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 6px;
 }
 .todo-item {
-    border-top: 2px solid black;
-    padding: 16px 0;
-    padding: 16px 15%;
-    display: flex;
-    text-align: start;
-    align-items: center;
+  border-top: 2px solid black;
+  padding: 16px 0;
+  padding: 16px 15%;
+  display: flex;
+  text-align: start;
+  align-items: center;
 }
 
 .todo-container {
-    background-color: rgb(43, 40, 36);
-    border-bottom: 2px solid rgb(0, 0, 0);
+  background-color: rgb(43, 40, 36);
+  border-bottom: 2px solid rgb(0, 0, 0);
 }
 
 .todo-column > .first-row {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .second-column button {
-    color: rgb(205, 53, 53);
+  color: rgb(205, 53, 53);
 }
